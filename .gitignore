@@ -26,7 +26,6 @@ pnpm-debug.log*
 
 # Tailwind-generated CSS (if using a custom output path)
 *.css.map
-*.css
 
 # IDEs and editors
 .vscode/
