@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import moment from "moment";
+import axios from "axios";
 
 const UploadPage_RawOrange = () => {
   const [file1Data, setFile1Data] = useState([]);
@@ -15,6 +16,21 @@ const UploadPage_RawOrange = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("employeeId");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [publicHolidays, setPublicHolidays] = useState([]);
+
+  // Fetch public holidays from API on mount
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      try {
+        const response = await axios.get("https://api.npoint.io/1e42e5185b019eefe616");
+        setPublicHolidays(response.data);
+      } catch (error) {
+        console.error("Error fetching public holidays:", error);
+        setPublicHolidays([]); // Fallback to empty array if the API call fails
+      }
+    };
+    fetchHolidays();
+  }, []);
 
   useEffect(() => {
     if (processedData.length > 0) {
@@ -40,15 +56,6 @@ const UploadPage_RawOrange = () => {
 
   const processFiles = () => {
     setIsLoading(true);
-
-    const publicHolidays = [
-      "2024-01-01",
-      "2024-03-07",
-      "2024-04-10",
-      "2024-04-11",
-      "2024-08-17",
-      "2024-09-16",
-    ];
 
     const filterByDateRange = (data) => {
       return data.filter((row) => {
